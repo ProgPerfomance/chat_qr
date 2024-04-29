@@ -60,7 +60,7 @@ void main() async {
       'text': item.assoc()['message'],
     });
   }
-  shelf_io.serve(handler, '63.251.122.116', 2310).then((server) {
+  shelf_io.serve(handler, '63.251.122.116', 2308).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
   httpServer(sql);
