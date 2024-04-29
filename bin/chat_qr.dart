@@ -14,12 +14,13 @@ void main() {
 
       // Если сообщение содержит информацию о новом пользователе
       if (parsedMessage.containsKey('action') && parsedMessage['action'] == 'join') {
-        // Добавляем пользователя в список
+
         users.add({
           'webSocket': webSocket,
           'cid': parsedMessage['cid'],
-          // Можно также сохранить какие-то другие данные о пользователе
         });
+        List sortedMessages =List.from( messages.where((element) => element['cid'] == users.last['cid']));
+        users.last['webSocket'].sink.add(jsonEncode(sortedMessages));
       } else {
         // Добавляем сообщение в список
         messages.add(parsedMessage);
