@@ -57,6 +57,7 @@ void httpServer () async{
     var json = await request.readAsString();
     var data = await jsonDecode(json);
     sql.execute("insert into chats (id, admin_uid, type) values (0, ${data['admin_uid']}, ${data['type']})");
+    return Response.ok('CREATED');
   });
   serve(router, '63.251.122.116', 2314);
 }
