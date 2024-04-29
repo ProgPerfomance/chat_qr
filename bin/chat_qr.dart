@@ -73,5 +73,18 @@ void httpServer () async{
     }
     return Response.ok(jsonEncode({'chat_id': idInt+1}));
   });
+  router.post('/getChats', (Request request)async{
+    var json = await request.readAsString();
+    var data = await jsonDecode(json);
+    List chats = [];
+    final response = await sql.execute("select * from users_chat where uid =${data['uid']}");
+    for(var item in response.rows) {
+      var data = item.assoc();
+      chats.add({
+        'id': data['chat_id'],
+      });
+    }
+    return Response.ok(jsonEncode(chats));
+  });
   serve(router, '63.251.122.116', 2314);
 }
