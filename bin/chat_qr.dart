@@ -69,7 +69,7 @@ void httpServer () async{
       );
       String pid = usersCount.rows.last.assoc()['id'] as String;
       int uidInt = int.parse(pid);
-      sql.execute("insert into users_chat (id, chat_id, uid) values (${idInt+1}, ${uidInt+1}, $item)");
+      sql.execute("insert into users_chat (id, chat_id, uid) values (${idInt+1}, ${uidInt+1}, '$item')");
     }
     return Response.ok(jsonEncode({'chat_id': idInt+1}));
   });
