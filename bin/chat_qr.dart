@@ -41,7 +41,7 @@ void main() {
   shelf_io.serve(handler, '63.251.122.116', 2310).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
-
+httpServer();
 }
 
 void httpServer () async{
