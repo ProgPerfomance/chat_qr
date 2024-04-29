@@ -3,26 +3,35 @@ import 'dart:convert';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
-List users =[];
-List messages=[{
-  'uid': '1',
-  'message': 'fgjudfijidfifdid',
-  'cid': '3',
-  'requestType': 'message', //init
-},{
-  'uid': '1',
-  'message': 'fgjudfijidfifdid',
-  'cid': '4',
-  'requestType': 'message', //init
-}];
+List<Map<String, dynamic>> users = [];
+List<Map<String, dynamic>> messages = [];
+
 void main() {
   var handler = webSocketHandler((webSocket) {
     webSocket.stream.listen((message) {
+      // При получении сообщения от клиента
+      var parsedMessage = jsonDecode(message);
 
-      messages.add(jsonDecode(message));
-      List sort = List.from(messages.where((element) => element['cid'] == jsonDecode(message)['cid']));
-      webSocket.sink.add("echo $sort");
+      // Если сообщение содержит информацию о новом пользователе
+      if (parsedMessage.containsKey('action') && parsedMessage['action'] == 'join') {
+        // Добавляем пользователя в список
+        users.add({
+          'webSocket': webSocket,
+          // Можно также сохранить какие-то другие данные о пользователе
+        });
+      } else {
+        // Добавляем сообщение в список
+        messages.add(parsedMessage);
 
+        // Отправляем сообщение всем подписчикам, кроме отправителя
+        for (var user in users) {
+          if (user['webSocket'] != webSocket) {
+            // Фильтруем сообщения для отправки только тем, кто находится в одном чате
+            var sortedMessages = messages.where((m) => m['cid'] == parsedMessage['cid']).toList();
+            user['webSocket'].sink.add(jsonEncode(sortedMessages));
+          }
+        }
+      }
     });
   });
 
