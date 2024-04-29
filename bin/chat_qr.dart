@@ -1,6 +1,9 @@
 import 'dart:convert';
-
+import 'package:mysql_client/mysql_client.dart';
+import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf/shelf_io.dart';
+import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
 List<Map<String, dynamic>> users = [];
@@ -35,7 +38,25 @@ void main() {
     });
   });
 
-  shelf_io.serve(handler, 'localhost', 8080).then((server) {
+  shelf_io.serve(handler, '63.251.122.116', 2310).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
+
+}
+
+void httpServer () async{
+  var sql = await MySQLConnection.createConnection(
+      host: 'localhost',
+      port: 3306,
+      userName: 'root',
+      password: '1234567890',
+      databaseName: 'qr_chats');
+  await sql.connect(timeoutMs: 99999999999);
+  Router router = Router();
+  router.post('/createChat', (Request request) async {
+    var json = await request.readAsString();
+    var data = await jsonDecode(json);
+    sql.execute("insert into chats (id, admin_uid, type) values (0, ${data['admin_uid']}, ${data['type']})");
+  });
+  serve(router, '63.251.122.116', 2314);
 }
