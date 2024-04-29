@@ -63,13 +63,15 @@ void httpServer () async{
     int idInt = int.parse(id);
     sql.execute("insert into chats (id, admin_uid, type) values (${idInt+1}, ${data['admin_uid']}, ${data['type']})");
     List users= data['users'];
+    var usersCount = await sql.execute(
+      "SELECT * FROM users_chat",
+    );
+    String pid = usersCount.rows.last.assoc()['id'] as String;
+    int uidInt = int.parse(pid);
+    int index = 0;
     for(var item in users){
-      var usersCount = await sql.execute(
-        "SELECT * FROM users_chat",
-      );
-      String pid = usersCount.rows.last.assoc()['id'] as String;
-      int uidInt = int.parse(pid);
-      sql.execute("insert into users_chat (id, chat_id, uid) values (${idInt+1}, ${uidInt+1}, '$item')");
+      index = index+1;
+      sql.execute("insert into users_chat (id, chat_id, uid) values (${idInt+1}, ${uidInt+index}, '$item')");
     }
     return Response.ok(jsonEncode({'chat_id': idInt+1}));
   });
