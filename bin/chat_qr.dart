@@ -71,7 +71,7 @@ void httpServer () async{
       int uidInt = int.parse(pid);
       sql.execute("insert into users_chat (id, chat_id, uid) values (${idInt+1}, ${uidInt+1}, $item)");
     }
-    return Response.ok(idInt+1);
+    return Response.ok(jsonEncode({'chat_id': idInt+1}));
   });
   serve(router, '63.251.122.116', 2314);
 }
