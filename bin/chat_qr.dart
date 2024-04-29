@@ -65,7 +65,7 @@ void httpServer () async{
     List users= data['users'];
     for(var item in users){
       var usersCount = await sql.execute(
-        "SELECT * FROM user_chats",
+        "SELECT * FROM users_chat",
       );
       String pid = usersCount.rows.last.assoc()['id'] as String;
       int uidInt = int.parse(pid);
