@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
@@ -19,16 +20,18 @@ void main() {
       var parsedMessage = jsonDecode(message);
 
       if (parsedMessage.containsKey('action') && parsedMessage['action'] == 'join') {
-        var chatId = parsedMessage['chatId'] as String; // Получаем переданный идентификатор чата
+        var chatId = parsedMessage['chatId'] as String;
         var user = User(webSocket, chatId);
         users.add(user);
-        user.webSocket.add(jsonEncode({'status': 'connected'})); // Отправляем пользователю подтверждение подключения
+        // После подключения отправляем пользователю все сообщения по указанному чату
+        var chatMessages = messages.where((msg) => msg['cid'] == chatId).toList();
+        user.webSocket.add(jsonEncode(chatMessages));
       } else {
         messages.add(parsedMessage);
 
         for (var user in users) {
           if (user.webSocket == webSocket && parsedMessage['cid'] == user.chatId) {
-            user.webSocket.add(jsonEncode(messages.where((m) => m['cid'] == user.chatId).toList()));
+            user.webSocket.add(jsonEncode([parsedMessage]));
           }
         }
       }
