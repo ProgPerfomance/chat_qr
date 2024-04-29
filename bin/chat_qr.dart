@@ -56,8 +56,22 @@ void httpServer () async{
   router.post('/createChat', (Request request) async {
     var json = await request.readAsString();
     var data = await jsonDecode(json);
-    sql.execute("insert into chats (id, admin_uid, type) values (0, ${data['admin_uid']}, ${data['type']})");
-    return Response.ok('CREATED');
+    var resul = await sql.execute(
+      "SELECT * FROM chats",
+    );
+    String id = resul.rows.last.assoc()['id'] as String;
+    int idInt = int.parse(id);
+    sql.execute("insert into chats (id, admin_uid, type) values (${idInt+1}, ${data['admin_uid']}, ${data['type']})");
+    List users= data['users'];
+    for(var item in users){
+      var usersCount = await sql.execute(
+        "SELECT * FROM user_chats",
+      );
+      String pid = usersCount.rows.last.assoc()['id'] as String;
+      int uidInt = int.parse(pid);
+      sql.execute("insert into users_chat (id, chat_id, uid) values (${idInt+1}, ${uidInt+1}, $item)");
+    }
+    return Response.ok(idInt+1);
   });
   serve(router, '63.251.122.116', 2314);
 }
