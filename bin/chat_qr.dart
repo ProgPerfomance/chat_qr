@@ -15,7 +15,9 @@ List<User> users = [];
 List<Map<String, dynamic>> messages = [];
 
 void main() {
-  var handler = webSocketHandler((webSocket) {
+  var handler = webSocketHandler((webSocketChannel) {
+    // Приводим WebSocketChannel к типу WebSocket
+    var webSocket = webSocketChannel.cast<WebSocket>();
     webSocket.stream.listen((message) {
       var parsedMessage = jsonDecode(message);
 
@@ -23,7 +25,6 @@ void main() {
         var chatId = parsedMessage['chatId'] as String;
         var user = User(webSocket, chatId);
         users.add(user);
-        // После подключения отправляем пользователю все сообщения по указанному чату
         var chatMessages = messages.where((msg) => msg['cid'] == chatId).toList();
         user.webSocket.add(jsonEncode(chatMessages));
       } else {
