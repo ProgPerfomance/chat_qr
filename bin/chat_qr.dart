@@ -77,7 +77,7 @@ void httpServer () async{
     var json = await request.readAsString();
     var data = await jsonDecode(json);
     List chats = [];
-    final response = await sql.execute("select * from users_chat where uid =${data['uid']}");
+    final response = await sql.execute("select * from users_chat where uid ='${data['uid']}'");
     for(var item in response.rows) {
       var data = item.assoc();
       chats.add({
