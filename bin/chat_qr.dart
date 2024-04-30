@@ -73,6 +73,8 @@ void httpServer(sql) async {
     var data = await jsonDecode(json);
     bool created = false;
     if(data['type'] == 0 || data['type'] == '0') {
+      print(data['users'][0]);
+      print(data['users'][1]);
       try {
         final user1 = await sql.execute(
             "select * from users_chat where uid= ${data['users'][0]}");
