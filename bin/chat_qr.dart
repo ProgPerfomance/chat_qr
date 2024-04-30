@@ -77,9 +77,9 @@ void httpServer(sql) async {
       print(data['users'][1]);
       try {
         final user1 = await sql.execute(
-            "select * from users_chat where uid= ${data['users'][0]}");
+            "select * from users_chat where uid= '${data['users'][0]}'");
         IResultSet user2 = await sql.execute(
-            "select * from users_chat where uid=${data['users'][1]}");
+            "select * from users_chat where uid='${data['users'][1]}'");
         var chatId =user2.rows.first.assoc()['chat_id'];
         created = true;
         print('fkjfkfjf');
