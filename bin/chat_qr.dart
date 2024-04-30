@@ -99,10 +99,10 @@ void httpServer(sql) async {
         .execute("select * from users_chat where uid ='${data['uid']}'");
     for (var item in response.rows) {
       var data = item.assoc();
-      final lastMessageRow = await sql.execute("select top 1 * from messages where chat_id = ${data['chat_id']}");
+      final lastMessageRow = await sql.execute("select * from messages where chat_id = ${data['chat_id']}");
       chats.add({
         'id': data['chat_id'],
-        'message': lastMessageRow.rows.first.assoc()['text'],
+        'message': lastMessageRow.rows.last.assoc()['text'],
       });
     }
     return Response.ok(jsonEncode(chats));
