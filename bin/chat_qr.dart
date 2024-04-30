@@ -79,26 +79,33 @@ void httpServer(sql) async {
         IResultSet user2 = await sql.execute(
             "select * from users_chat where uid=${data['users'][1]}");
         var chatId =user2.rows.first.assoc()['chat_id'];
+        created = true;
+        print('fkjfkfjf');
         return Response.ok(jsonEncode({'chat_id': chatId}));
       } catch(e) {
-        var resul = await sql.execute(
-          "SELECT * FROM chats",
-        );
-        String id = resul.rows.last.assoc()['id'] as String;
-        int idInt = int.parse(id);
-        sql.execute(
-            "insert into chats (id, admin_uid, type) values (${idInt + 1}, ${data['admin_uid']}, ${data['type']})");
-        List users = data['users'];
-        for (var item in users) {
-          var usersCount = await sql.execute(
-            "SELECT * FROM users_chat",
+        if(created == false) {
+          var resul = await sql.execute(
+            "SELECT * FROM chats",
           );
-          String pid = usersCount.rows.last.assoc()['id'] as String;
-          int uidInt = int.parse(pid);
+          String id = resul.rows.last.assoc()['id'] as String;
+          int idInt = int.parse(id);
           sql.execute(
-              "insert into users_chat (id, chat_id, uid) values (${uidInt + 1}, ${idInt + 1}, '$item')");
-        }
-        return Response.ok(jsonEncode({'chat_id': idInt + 1}));
+              "insert into chats (id, admin_uid, type) values (${idInt +
+                  1}, ${data['admin_uid']}, ${data['type']})");
+          List users = data['users'];
+          for (var item in users) {
+            var usersCount = await sql.execute(
+              "SELECT * FROM users_chat",
+            );
+            print('[[[fkjfkfjf]]]');
+            String pid = usersCount.rows.last.assoc()['id'] as String;
+            int uidInt = int.parse(pid);
+            sql.execute(
+                "insert into users_chat (id, chat_id, uid) values (${uidInt +
+                    1}, ${idInt + 1}, '$item')");
+          }
+          return Response.ok(jsonEncode({'chat_id': idInt + 1}));
+        } else {}
       }
     } else {
       var resul = await sql.execute(
