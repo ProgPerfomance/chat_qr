@@ -101,13 +101,17 @@ void httpServer(sql) async {
       var data = item.assoc();
       IResultSet opponents = await sql.execute(
           "select * from users_chat where chat_id = ${data['chat_id']}");
+      List oponentsList = [];
+      for(var item in opponents.rows) {
+        oponentsList.add(item.assoc()['uid']);
+      }
       try {
         final lastMessageRow = await sql.execute(
             "select * from messages where chat_id = ${data['chat_id']}");
         chats.add({
           'id': data['chat_id'],
           'message': lastMessageRow.rows.last.assoc()['message'],
-          'opponents': List.generate(opponents.rows.length, (index) => opponents.rows.first.assoc()['uid']),
+          'opponents': oponentsList,
           'created_at': lastMessageRow.rows.last.assoc()['created_at'],
           'message_id': int.parse(lastMessageRow.rows.last.assoc()['id']),
           'message_sender': lastMessageRow.rows.last.assoc()['uid'],
@@ -115,7 +119,7 @@ void httpServer(sql) async {
       } catch(e) {
         chats.add({
           'id': data['chat_id'],
-          'opponents': List.generate(opponents.rows.length, (index) => opponents.rows.first.assoc()['uid']),
+          'opponents':oponentsList,
           'message': 'Нет сообщений'//lastMessageRow.rows.last.assoc()['text'],
         });
       }
