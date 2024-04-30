@@ -99,7 +99,7 @@ void httpServer(sql) async {
         .execute("select * from users_chat where uid ='${data['uid']}'");
     for (var item in response.rows) {
       var data = item.assoc();
-      final opponents = await sql.execute(
+      IResultSet opponents = await sql.execute(
           "select * from users_chat where chat_id = ${data['chat_id']}");
       try {
         final lastMessageRow = await sql.execute(
@@ -107,7 +107,7 @@ void httpServer(sql) async {
         chats.add({
           'id': data['chat_id'],
           'message': lastMessageRow.rows.last.assoc()['message'],
-          'opponents': List.generate(opponents.rows.lenght, (index) => opponents.rows.first.assoc['uid']),
+          'opponents': List.generate(opponents.rows.length, (index) => opponents.rows.first.assoc()['uid']),
           'created_at': lastMessageRow.rows.last.assoc()['created_at'],
           'message_id': int.parse(lastMessageRow.rows.last.assoc()['id']),
           'message_sender': lastMessageRow.rows.last.assoc()['uid'],
@@ -115,7 +115,7 @@ void httpServer(sql) async {
       } catch(e) {
         chats.add({
           'id': data['chat_id'],
-          'opponents': List.generate(opponents.rows.lenght, (index) => opponents.rows.first.assoc['uid']),
+          'opponents': List.generate(opponents.rows.length, (index) => opponents.rows.first.assoc()['uid']),
           'message': 'Нет сообщений'//lastMessageRow.rows.last.assoc()['text'],
         });
       }
