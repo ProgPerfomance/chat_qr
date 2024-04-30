@@ -106,6 +106,7 @@ void httpServer(sql) async {
           'id': data['chat_id'],
           'message': lastMessageRow.rows.last.assoc()['message'],
           'created_at': lastMessageRow.rows.last.assoc()['created_at'],
+          'message_id':lastMessageRow.rows.last.assoc()['id'],
         });
       } catch(e) {
         chats.add({
@@ -114,6 +115,7 @@ void httpServer(sql) async {
         });
       }
     }
+    chats.sort((a, b) => (b['message_id'] ?? 0).compareTo(a['message_id'] ?? 0));
     return Response.ok(jsonEncode(chats));
   });
   serve(router, '63.251.122.116', 2314);
