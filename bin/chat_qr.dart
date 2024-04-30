@@ -75,9 +75,9 @@ void httpServer(sql) async {
     if(data['type'] == 0 || data['type'] == '0') {
       try {
         final user1 = await sql.execute(
-            "select * from users_chat where ${data['users'][0]}");
+            "select * from users_chat where uid= ${data['users'][0]}");
         IResultSet user2 = await sql.execute(
-            "select * from users_chat where ${data['users'][1]}");
+            "select * from users_chat where uid=${data['users'][1]}");
         var chatId =user2.rows.first.assoc()['chat_id'];
         return Response.ok(jsonEncode({'chat_id': chatId}));
       } catch(e) {
