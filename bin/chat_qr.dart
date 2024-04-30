@@ -106,7 +106,7 @@ void httpServer(sql) async {
           'id': data['chat_id'],
           'message': lastMessageRow.rows.last.assoc()['message'],
           'created_at': lastMessageRow.rows.last.assoc()['created_at'],
-          'message_id':lastMessageRow.rows.last.assoc()['id'],
+          'message_id': int.parse(lastMessageRow.rows.last.assoc()['id']),
         });
       } catch(e) {
         chats.add({
