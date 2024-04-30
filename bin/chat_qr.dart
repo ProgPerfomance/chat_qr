@@ -71,6 +71,7 @@ void httpServer(sql) async {
   router.post('/createChat', (Request request) async {
     var json = await request.readAsString();
     var data = await jsonDecode(json);
+  //  final chat = await sql.execute("select * from users_chat where ");
     var resul = await sql.execute(
       "SELECT * FROM chats",
     );
@@ -98,8 +99,10 @@ void httpServer(sql) async {
         .execute("select * from users_chat where uid ='${data['uid']}'");
     for (var item in response.rows) {
       var data = item.assoc();
+      final lastMessageRow = await sql.execute("select top 1 * from messages where chat_id = ${data['chat_id']}");
       chats.add({
         'id': data['chat_id'],
+        'message': lastMessageRow.rows.first.assoc()['text'],
       });
     }
     return Response.ok(jsonEncode(chats));
