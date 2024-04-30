@@ -104,7 +104,8 @@ void httpServer(sql) async {
             "select * from messages where chat_id = ${data['chat_id']}");
         chats.add({
           'id': data['chat_id'],
-          'message': lastMessageRow.rows.last.assoc()['text'],
+          'message': lastMessageRow.rows.last.assoc()['message'],
+          'created_at': lastMessageRow.rows.last.assoc()['created_at'],
         });
       } catch(e) {
         chats.add({
