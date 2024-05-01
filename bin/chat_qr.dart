@@ -58,6 +58,7 @@ void main() async {
       'cid': item.assoc()['chat_id'],
       'uid': item.assoc()['uid'],
       'text': item.assoc()['message'],
+      'created_at': item.assoc()['created_at'],
     });
   }
   shelf_io.serve(handler, '63.251.122.116', 2308).then((server) {
