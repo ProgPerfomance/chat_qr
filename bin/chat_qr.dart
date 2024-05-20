@@ -6,17 +6,26 @@ import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
+import 'config.dart';
+
 List<Map<String, dynamic>> users = [];
 List<Map<String, dynamic>> messages = [];
 
 void main() async {
   var sql = await MySQLConnection.createConnection(
-      host: 'localhost',
+      host: sqlhost,
       port: 3306,
-      userName: 'root',
-      password: '1234567890',
-      databaseName: 'qr_chats');
+      userName: sqlUser,
+      password: sqlPasswors,
+      databaseName: sqlDB);
   await sql.connect(timeoutMs: 99999999999);
+
+  Future<void> rebutMessages () async{
+    if(messages.length >10000) {
+      messages.clear();
+      httpServer(sql);
+    }
+  }
   var handler = webSocketHandler((webSocket) {
     webSocket.stream.listen((message) async {
       // При получении сообщения от клиента
@@ -61,13 +70,19 @@ void main() async {
       'created_at': item.assoc()['created_at'],
     });
   }
-  shelf_io.serve(handler, '63.251.122.116', 2308).then((server) {
+  shelf_io.serve(handler, '63.251.122.116', portSocket).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
   httpServer(sql);
 }
 
 void httpServer(sql) async {
+
+  Future<void> checkSQL() async{
+    if(sql.connected == false) {
+      sql.connect();
+    }
+  }
   Router router = Router();
   router.post('/createChat', (Request request) async {
     var json = await request.readAsString();
@@ -133,6 +148,8 @@ void httpServer(sql) async {
 
   });
   router.post('/getChats', (Request request) async {
+
+    checkSQL();
     var json = await request.readAsString();
     var data = await jsonDecode(json);
     List chats = [];
@@ -168,5 +185,6 @@ void httpServer(sql) async {
     chats.sort((a, b) => (b['message_id'] ?? 0).compareTo(a['message_id'] ?? 0));
     return Response.ok(jsonEncode(chats));
   });
-  serve(router, '63.251.122.116', 2314);
+  serve(router, '63.251.122.116', portHTPP);
+
 }
