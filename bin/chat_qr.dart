@@ -182,7 +182,7 @@ void httpServer(sql) async {
         });
       }
     }
-   // chats.sort((a, b) => (b['message_id'] ?? 0).compareTo(a['message_id'] ?? 0));
+    chats.sort((a, b) => (b['message_id'] ?? 0).compareTo(a['message_id'] ?? 0));
     return Response.ok(jsonEncode(chats));
   });
   serve(router, '63.251.122.116', portHTPP);
