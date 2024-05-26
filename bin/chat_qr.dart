@@ -154,7 +154,7 @@ void httpServer(sql) async {
     var data = await jsonDecode(json);
     List chats = [];
     final response = await sql
-        .execute("select * from users_chat where uid ='${data['uid']}'");
+        .execute("select * from users_chat where uid = '${data['uid']}'");
     for (var item in response.rows) {
       var data = item.assoc();
       IResultSet opponents = await sql.execute(
@@ -182,7 +182,7 @@ void httpServer(sql) async {
         });
       }
     }
-    chats.sort((a, b) => (b['message_id'] ?? 0).compareTo(a['message_id'] ?? 0));
+   // chats.sort((a, b) => (b['message_id'] ?? 0).compareTo(a['message_id'] ?? 0));
     return Response.ok(jsonEncode(chats));
   });
   serve(router, '63.251.122.116', portHTPP);
