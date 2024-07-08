@@ -140,23 +140,6 @@ void httpServer(MySQLConnection sql) async {
         }
         return Response.ok(jsonEncode({'chat_id': idInt + 1}));
       }
-      else if (data['type'] == 1 || data['type'] == '1') {
-        print('type: 1');
-        var resul = await sql.execute(
-          "SELECT * FROM chats",
-        );
-        String id = resul.rows.last.assoc()['id'] as String;
-        int idInt = int.parse(id);
-        var resulUserChats = await sql.execute(
-          "SELECT * FROM user_chats",
-        );
-        String ucid = resulUserChats.rows.last.assoc()['id'] as String;
-        int ucidInt = int.parse(ucid);
-        await sql.execute(
-            "INSERT INTO chats (id, admin_uid, type,name) VALUES (${idInt + 1}, '${data['uid']}', ${data['type']}, '${data['name']}')");
-        await sql.execute("insert into user_chats (id, chat_id, uid) values (${ucidInt + 1}, ${idInt+1}, '${data['uid']}')");
-        return Response.ok(jsonEncode({'chat_id': idInt + 1}));
-      }
     // } else {
     //   var resul = await sql.execute(
     //     "SELECT * FROM chats",
@@ -177,6 +160,23 @@ void httpServer(MySQLConnection sql) async {
     //         "INSERT INTO users_chat (id, chat_id, uid) VALUES (${uidInt + 1}, ${idInt + 1}, '$item')");
     //   }
     //   return Response.ok(jsonEncode({'chat_id': idInt + 1}));
+    }
+    else if (data['type'] == 1 || data['type'] == '1') {
+      print('type: 1');
+      var resul = await sql.execute(
+        "SELECT * FROM chats",
+      );
+      String id = resul.rows.last.assoc()['id'] as String;
+      int idInt = int.parse(id);
+      var resulUserChats = await sql.execute(
+        "SELECT * FROM user_chats",
+      );
+      String ucid = resulUserChats.rows.last.assoc()['id'] as String;
+      int ucidInt = int.parse(ucid);
+      await sql.execute(
+          "INSERT INTO chats (id, admin_uid, type,name) VALUES (${idInt + 1}, '${data['uid']}', ${data['type']}, '${data['name']}')");
+      await sql.execute("insert into user_chats (id, chat_id, uid) values (${ucidInt + 1}, ${idInt+1}, '${data['uid']}')");
+      return Response.ok(jsonEncode({'chat_id': idInt + 1}));
     }
   });
   router.post('/addUser', (Request request) async {
