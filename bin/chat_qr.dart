@@ -154,6 +154,7 @@ void httpServer(MySQLConnection sql) async {
         await sql.execute(
             "INSERT INTO chats (id, admin_uid, type,name) VALUES (${idInt + 1}, '${data['uid']}', ${data['type']}, '${data['name']}')");
         await sql.execute("insert into user_chats (id, chat_id, uid) values (${ucidInt + 1}, ${idInt+1}, '${data['uid']}')");
+        return Response.ok(jsonEncode({'chat_id': idInt + 1}));
       }
     // } else {
     //   var resul = await sql.execute(
@@ -187,6 +188,7 @@ void httpServer(MySQLConnection sql) async {
     String ucid = resulUserChats.rows.last.assoc()['id'] as String;
     int ucidInt = int.parse(ucid);
     await sql.execute("insert into user_chats (id, chat_id, uid) values (${ucidInt + 1}, ${data['chat_id']}, '${data['uid']}')");
+    return Response.ok('ok');
   });
   router.post('/getChats', (Request request) async {
     checkSQL();
