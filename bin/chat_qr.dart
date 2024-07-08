@@ -147,7 +147,7 @@ void httpServer(MySQLConnection sql) async {
         String id = resul.rows.last.assoc()['id'] as String;
         int idInt = int.parse(id);
         var resulUserChats = await sql.execute(
-          "SELECT * FROM chats",
+          "SELECT * FROM user_chats",
         );
         String ucid = resulUserChats.rows.last.assoc()['id'] as String;
         int ucidInt = int.parse(ucid);
