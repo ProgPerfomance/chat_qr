@@ -202,7 +202,7 @@ void httpServer(MySQLConnection sql) async {
     for (var item in response.rows) {
       var data = item.assoc();
       final chatRow = await sql
-          .execute("select * from chats where uid = '${data['id']}'");
+          .execute("select * from chats where id = '${data['chat_id']}'");
       IResultSet opponents = await sql.execute(
           "select * from users_chat where chat_id = ${data['chat_id']}");
       List oponentsList = [];
