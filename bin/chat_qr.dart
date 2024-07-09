@@ -169,7 +169,7 @@ void httpServer(MySQLConnection sql) async {
       String id = resul.rows.last.assoc()['id'] as String;
       int idInt = int.parse(id);
       var resulUserChats = await sql.execute(
-        "SELECT * FROM user_chats",
+        "SELECT * FROM users_chat",
       );
       String ucid = resulUserChats.rows.last.assoc()['id'] as String;
       int ucidInt = int.parse(ucid);
@@ -185,7 +185,7 @@ void httpServer(MySQLConnection sql) async {
     var json = await request.readAsString();
     var data = await jsonDecode(json);
     var resulUserChats = await sql.execute(
-      "SELECT * FROM chats",
+      "SELECT * FROM users_chat",
     );
     String ucid = resulUserChats.rows.last.assoc()['id'] as String;
     int ucidInt = int.parse(ucid);
