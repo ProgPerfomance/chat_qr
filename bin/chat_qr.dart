@@ -201,6 +201,8 @@ void httpServer(MySQLConnection sql) async {
         .execute("select * from users_chat where uid = '${data['uid']}'");
     for (var item in response.rows) {
       var data = item.assoc();
+      final chatRow = await sql
+          .execute("select * from chats where uid = '${data['id']}'");
       IResultSet opponents = await sql.execute(
           "select * from users_chat where chat_id = ${data['chat_id']}");
       List oponentsList = [];
@@ -212,6 +214,8 @@ void httpServer(MySQLConnection sql) async {
             "select * from messages where chat_id = ${data['chat_id']}");
         chats.add({
           'id': data['chat_id'],
+          'name': chatRow.rows.first.assoc()['name'],
+          'type': chatRow.rows.first.assoc()['type'],
           'message': lastMessageRow.rows.last.assoc()['message'],
           'opponents': oponentsList,
           'created_at': lastMessageRow.rows.last.assoc()['created_at'],
@@ -221,6 +225,8 @@ void httpServer(MySQLConnection sql) async {
       } catch (e) {
         chats.add({
           'id': data['chat_id'],
+          'name': chatRow.rows.first.assoc()['name'],
+          'type': chatRow.rows.first.assoc()['type'],
           'opponents': oponentsList,
           'message': 'Нет сообщений' //lastMessageRow.rows.last.assoc()['text'],
         });
