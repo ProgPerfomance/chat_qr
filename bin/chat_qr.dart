@@ -5,7 +5,7 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
-
+import 'push_service.dart';
 import 'config.dart';
 
 List<Map<String, dynamic>> users = [];
@@ -191,6 +191,12 @@ void httpServer(MySQLConnection sql) async {
     int ucidInt = int.parse(ucid);
     await sql.execute("insert into users_chat (id, chat_id, uid) values (${ucidInt + 1}, ${data['chat_id']}, '${data['uid']}')");
     return Response.ok('ok');
+  });
+  router.post('/sendPush', (Request request) async{
+    var json = await request.readAsString();
+    var data = await jsonDecode(json);
+    globalPush(data['title'], data['body'], data['']);
+    return Response.ok('send');
   });
   router.post('/getChats', (Request request) async {
     checkSQL();
