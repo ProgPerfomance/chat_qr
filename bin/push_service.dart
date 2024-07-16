@@ -29,7 +29,7 @@ Future<void> globalPush(title, body) async {
     headers: { 'Content-Type': 'application/json' },
     body: jsonEncode({
       "message": {
-        "topic": "main",
+        "topic": "78",
         "notification": {
           "title": title,
           "body": body,
