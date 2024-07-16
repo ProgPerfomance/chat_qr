@@ -11,7 +11,7 @@ const String firebaseMessagingUrl = 'https://fcm.googleapis.com/v1/projects/tran
 
 
 
-Future<void> globalPush(title, body) async {
+Future<void> globalPush(title, body,topic) async {
   // Load the service account credentials
   final serviceAccountCredentials = ServiceAccountCredentials.fromJson(serviceAccountJson);
 
@@ -29,7 +29,7 @@ Future<void> globalPush(title, body) async {
     headers: { 'Content-Type': 'application/json' },
     body: jsonEncode({
       "message": {
-        "topic": "78",
+        "topic": topic,
         "notification": {
           "title": title,
           "body": body,
