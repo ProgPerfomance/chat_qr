@@ -2,20 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart';
-final serviceAccountJson = File('push.json').readAsStringSync();
+final serviceAccountJson = File('transport-7ee79-firebase-adminsdk-5jrj3-7f564a0dea.json').readAsStringSync();
 
 const String firebaseMessagingUrl = 'https://fcm.googleapis.com/v1/projects/transport-7ee79/messages:send';
 
 
 
-void main() async {
 
-  const title = 'Hello';
-  const body = 'This is a test notification';
 
-}
 
-Future<void> globalPush(title, body, topic) async {
+Future<void> globalPush(title, body) async {
   // Load the service account credentials
   final serviceAccountCredentials = ServiceAccountCredentials.fromJson(serviceAccountJson);
 
@@ -33,7 +29,7 @@ Future<void> globalPush(title, body, topic) async {
     headers: { 'Content-Type': 'application/json' },
     body: jsonEncode({
       "message": {
-        "topic": topic,
+        "topic": "main",
         "notification": {
           "title": title,
           "body": body,
@@ -72,13 +68,13 @@ Future<void> localPush(token, title, body) async {
     Uri.parse(firebaseMessagingUrl),
     headers: { 'Content-Type': 'application/json' },
     body: jsonEncode( {
-        "message": {
-          "token": token,
-          "notification": {
-            "body": body,
-            "title": title,
-          }
-        }}),
+      "message": {
+        "token": token,
+        "notification": {
+          "body": body,
+          "title": title,
+        }
+      }}),
   );
 
   if (response.statusCode == 200) {

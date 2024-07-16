@@ -195,7 +195,7 @@ void httpServer(MySQLConnection sql) async {
   router.post('/sendPush', (Request request) async{
     var json = await request.readAsString();
     var data = await jsonDecode(json);
-    globalPush(data['title'], data['body'], data['']);
+    globalPush(data['title'], data['body'],);
     return Response.ok('send');
   });
   router.post('/getChats', (Request request) async {
