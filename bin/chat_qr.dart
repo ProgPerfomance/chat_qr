@@ -161,7 +161,7 @@ void httpServer(MySQLConnection sql) async {
     //   }
     //   return Response.ok(jsonEncode({'chat_id': idInt + 1}));
     }
-    else if (data['type'] == 1 || data['type'] == '1') {
+    else if (data['type'] == 1 || data['type'] == '1' || data['type'] == 2 || data['type'] == '2') {
       print('type: 1');
       var resul = await sql.execute(
         "SELECT * FROM chats",
